@@ -1,0 +1,6 @@
+.report.json
+.fdk/
+coverage/
+log/
+server/node_modules/
+server/etc/

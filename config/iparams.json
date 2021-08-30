@@ -1,0 +1,14 @@
+{
+    "api_key": {
+        "description": "Please enter your sms77 API key",
+        "display_name": "API Key",
+        "required": true,
+        "secure": true,
+        "type": "text"
+    },
+    "from": {
+        "description": "Max. 16 numeric or 11 alphanumeric characters.",
+        "display_name": "From (SMS)",
+        "type": "text"
+    }
+}

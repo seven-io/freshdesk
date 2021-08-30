@@ -1,0 +1,105 @@
+<html>
+<head>
+    <script src='https://static.freshdev.io/fdk/2.0/assets/fresh_client.js'></script>
+    <link href='styles/style.css' rel='stylesheet' type='text/css'/>
+    <link
+            href='https://static.freshdev.io/fdk/2.0/assets/freshdesk.css'
+            rel='stylesheet'
+            type='text/css'
+    />
+</head>
+<body>
+<div class='fw-widget-wrapper'>
+    <h5><label for='to'>To</label></h5>
+    <input
+            class='form-control'
+            id='to'
+            placeholder='Enter number with country code'
+            required
+    />
+
+    <h5><label for='text'>Message</label></h5>
+    <textarea
+            class='form-control'
+            id='text'
+            placeholder='Enter your Message'
+            required
+    ></textarea>
+
+    <h5><label for='label'>Label</label></h5>
+    <input
+            class='form-control'
+            id='label'
+            maxlength='100'
+            placeholder='Allowed: a-z, A-Z, 0-9, .-_@'
+    />
+
+    <h5><label for='foreign_id'>Foreign ID</label></h5>
+    <input
+            class='form-control'
+            id='foreign_id'
+            maxlength='64'
+            placeholder='Allowed: a-z, A-Z, 0-9, .-_@'
+    />
+
+    <h5><label for='from'>From</label></h5>
+    <input
+            class='form-control'
+            id='from'
+            maxlength='16'
+            placeholder='Max 16 numeric or 11 alphanumeric chars'
+    />
+
+    <h5>
+        <label>
+            Flash
+            <input
+                    class='form-control'
+                    id='flash'
+                    type='checkbox'
+            />
+        </label>
+    </h5>
+
+    <h5>
+        <label>
+            Debug
+            <input
+                    class='form-control'
+                    id='debug'
+                    type='checkbox'
+            />
+        </label>
+    </h5>
+
+    <h5>
+        <label>
+            No Reload
+            <input
+                    class='form-control'
+                    id='no_reload'
+                    type='checkbox'
+            />
+        </label>
+    </h5>
+
+    <h5>
+        <label></label>
+    </h5>
+
+    <h5>
+        <label>
+            Performance Tracking
+            <input
+                    class='form-control form-'
+                    id='performance_tracking'
+                    type='checkbox'
+            />
+        </label>
+    </h5>
+
+    <button class='btn btn-primary sms_button' id='send-sms'>Send</button>
+</div>
+</body>
+<script src='scripts/app.js' type='text/javascript'></script>
+</html>

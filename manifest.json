@@ -1,0 +1,21 @@
+{
+    "dependencies": {},
+    "platform-version": "2.0",
+    "product": {
+        "freshdesk": {
+            "location": {
+                "contact_sidebar": {
+                    "icon": "styles/images/icon.svg",
+                    "url": "index.html"
+                },
+                "ticket_sidebar": {
+                    "icon": "styles/images/icon.svg",
+                    "url": "index.html"
+                }
+            }
+        }
+    },
+    "whitelisted-domains": [
+        "https://gateway.sms77.io"
+    ]
+}
