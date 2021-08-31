@@ -10,5 +10,10 @@
         "description": "Max. 16 numeric or 11 alphanumeric characters.",
         "display_name": "From (SMS)",
         "type": "text"
+    },
+    "voice_from": {
+        "description": "Must be verified or a shared number.",
+        "display_name": "From (Voice)",
+        "type": "text"
     }
 }

@@ -1,8 +1,12 @@
-# sms77 SMS
+# sms77 for freshdesk
 
 ## Description
 
-This app enables an agent to send a custom message as an SMS.
+This app enables an agent to send SMS and make text-to-speech calls to customers.
+
+Works on:
+- contact details page
+- ticket details page
 
 ***
 
@@ -12,27 +16,17 @@ This app enables an agent to send a custom message as an SMS.
 
 ***
 
-## Features
-
-App location: ticket details page App location: contact details page
-
-| Feature | Notes |
-| :---: | --- |
-| [`Request API`](https://developers.freshdesk.com/v2/docs/request-api/) |   Request API is used to facilitate [`SMI`](https://developers.freshdesk.com/v2/docs/server-method-invocation/) which in turn calls sms77 api to send message|
-
-***
-
 ## Development
 
 ### Prerequisites
 
-1. Make sure you have a trial Freshdesk account created
+1. Make sure you have a (trial) Freshdesk account created
 2. A properly
    configured [Development environment](https://developers.freshdesk.com/v2/docs/quick-start/)
    along with
    the [FDK (Freshworks Development Kit)](https://developers.freshdesk.com/v2/docs/freshworks-cli/)
    .
-3. A sms77 account with API key.
+3. A [sms77](https://www.sms77.io) account with API key.
 
 ### Usage
 
