@@ -1,8 +1,37 @@
 {
     "dependencies": {},
-    "platform-version": "2.0",
+    "engines": {
+        "node": "14.18.3",
+        "fdk": "8.6.4"
+    },
+    "platform-version": "2.2",
     "product": {
         "freshdesk": {
+            "events": {
+                "onAppInstall": {
+                    "handler": "onAppInstallHandler"
+                },
+                "onAppUninstall": {
+                    "handler": "onAppUninstallHandler"
+                },
+                "onExternalEvent": {
+                    "handler": "onExternalEventHandler"
+                },
+                "onScheduledEvent": {
+                    "handler": "onScheduledEventHandler"
+                },
+                "onTicketCreate": {
+                    "handler": "onTicketCreateHandler"
+                }
+            },
+            "functions": {
+                "sendSMS": {
+                    "timeout": 10
+                },
+                "sendVoice": {
+                    "timeout": 10
+                }
+            },
             "location": {
                 "contact_sidebar": {
                     "icon": "styles/images/icon.svg",

@@ -5,6 +5,7 @@
 This app enables an agent to send SMS and make text-to-speech calls to customers.
 
 Works on:
+
 - contact details page
 - ticket details page
 
@@ -12,7 +13,17 @@ Works on:
 
 ## Screenshots
 
-<img src="screenshots/input.png" width="300">
+### Send SMS to contact
+
+<img alt='Send SMS' src="screenshots/contact_details.png" />
+
+### Send SMS to ticket contact
+
+<img alt='Send SMS' src="screenshots/ticket_details.png" />
+
+### Configuration
+
+<img alt='Send SMS' src="screenshots/custom_config.png" />
 
 ***
 

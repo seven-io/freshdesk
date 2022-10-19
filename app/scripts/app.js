@@ -3,14 +3,20 @@
 /**
  * Render the application on click
  */
-document.onreadystatechange = function() {
-    if (document.readyState === 'interactive') app.initialized().then(function(_client) {
+document.onreadystatechange = () => {
+    if (document.readyState === 'interactive') app.initialized().then(_client => {
         window.client = _client
 
-        client.events.on('app.activated', function() {
-            document.querySelectorAll('input[name="method"]').forEach(function(input) {
-                input.addEventListener('click', function(e) {
-                    var isSMS = 'sendSMS' === e.target.value
+        client.events.on('app.activated', async () => {
+            const {contact} = await client.data.get('contact')
+            const {mobile, phone} = contact
+            const to = mobile || phone || ''
+
+            document.querySelectorAll('input[name="method"]').forEach(input => {
+                input.addEventListener('click', e => {
+                    document.getElementById('to').value = to
+
+                    const isSMS = 'sendSMS' === e.target.value
 
                     document.getElementById('from').placeholder = isSMS
                         ? 'Max 16 numeric or 11 alphanumeric chars'
@@ -36,16 +42,9 @@ document.onreadystatechange = function() {
 
             document.getElementById('send_message').addEventListener('click', sendMessage)
 
-            client.data.get('contact').then(function(data) {
-                if (data.contact.mobile)
-                    document.getElementById('to').value = data.contact.mobile
-            }, function(e) {
-                console.error('Error fetching contact data:', e)
-            })
+            document.getElementById('to').value = to
         })
-    }).catch(function(e) {
-        console.error('An error occurred. Details:', e)
-    })
+    }).catch(e => notifyUser('danger', 'An error occurred. Details: ' + e.message))
 }
 
 /**
@@ -56,7 +55,7 @@ document.onreadystatechange = function() {
 function notifyUser(status, message) {
     client.interface.trigger('showNotify', {
         message: message,
-        type: status
+        type: status,
     })
 }
 
@@ -64,8 +63,8 @@ function notifyUser(status, message) {
  * Send SMS/TTS to user with the given message and status
  */
 function sendMessage() {
-    var to = getElementValueById('to')
-    var text = getElementValueById('text')
+    const to = getElementValueById('to')
+    const text = getElementValueById('text')
 
     if (!to)
         return notifyUser('warning', 'Please enter the recipient\'s mobile number.')
@@ -73,30 +72,33 @@ function sendMessage() {
     if (!text)
         return notifyUser('warning', 'Please enter some message content.')
 
-    var params = {
+    const params = {
         debug: isElementByIdChecked('debug'),
         from: getElementValueById('from'),
         text: text,
-        to: to
+        to: to,
     }
 
-    var method = document.querySelector('input[name="method"]:checked').value
+    const method = document.querySelector('input[name="method"]:checked').value
 
-    if ('sendSMS' === method) {
-        params.flash = isElementByIdChecked('flash')
-        params.foreign_id = getElementValueById('foreign_id')
-        params.label = getElementValueById('label')
-        params.no_reload = isElementByIdChecked('no_reload')
-        params.performance_tracking = isElementByIdChecked('performance_tracking')
-    } else params.xml = isElementByIdChecked('xml')
+    switch (method) {
+        case 'sendSMS':
+            params.flash = isElementByIdChecked('flash')
+            params.foreign_id = getElementValueById('foreign_id')
+            params.label = getElementValueById('label')
+            params.no_reload = isElementByIdChecked('no_reload')
+            params.performance_tracking = isElementByIdChecked('performance_tracking')
+            break
+        case 'sendVoice':
+            params.xml = isElementByIdChecked('xml')
+            break
+        default:
+            throw new Error(`Unknown method "${method}"`)
+    }
 
     client.request.invoke(method, params)
-        .then(function(res) {
-            notifyUser('success', 'Message dispatched with response: ' + res.response)
-        })
-        .catch(function(e) {
-            notifyUser('danger', e.message || 'Unexpected error.')
-        })
+        .then(res => notifyUser('success', 'Message dispatched with response: ' + res.response))
+        .catch(e => notifyUser('danger', e.message || 'Unexpected error.'))
 }
 
 function getElementValueById(id) {
