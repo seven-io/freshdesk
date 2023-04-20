@@ -14,13 +14,13 @@ exports = {
     onExternalEventHandler: async function() {
         renderData()
     },
-    request: async function(endpoint, params, args) {
-        const headers = {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-            SentWith: 'freshworks',
-            'X-Api-Key': args.iparams.api_key,
-        }
+    request: async function(tpl, params, args) {
+        /*        const headers = {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                    SentWith: 'freshworks',
+                    'X-Api-Key': args.iparams.api_key,
+                }*/
         const body = Object.assign({
             debug: Number(args.debug),
             json: 1,
@@ -29,9 +29,9 @@ exports = {
         }, params)
 
         try {
-            const {response} = await $request.post('https://gateway.sms77.io/api/' + endpoint, {
+            const {response} = await $request.invokeTemplate(tpl, {
                 body: JSON.stringify(body),
-                headers,
+                //headers,
             })
             const success = Number.parseInt(JSON.parse(response).success)
 
@@ -50,7 +50,7 @@ exports = {
             performance_tracking: Number(args.performance_tracking),
         }
 
-        return await this.request('sms', params, args)
+        return await this.request('sendSMS', params, args)
     },
     sendVoice: async function(args) {
         const params = {
@@ -58,6 +58,6 @@ exports = {
             xml: Number(args.xml),
         }
 
-        return await this.request('voice', params, args)
+        return await this.request('sendVoice', params, args)
     },
 }

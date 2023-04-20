@@ -1,0 +1,28 @@
+{
+    "sendSMS": {
+        "schema": {
+            "headers": {
+                "Accept": "application/json",
+                "Content-Type": "application/json",
+                "SentWith": "freshworks",
+                "X-Api-Key": "<%= iparam.api_key %>"
+            },
+            "host": "gateway.seven.io",
+            "method": "POST",
+            "path": "/api/sms"
+        }
+    },
+    "sendVoice": {
+        "schema": {
+            "headers": {
+                "Accept": "application/json",
+                "Content-Type": "application/json",
+                "SentWith": "freshworks",
+                "X-Api-Key": "<%= iparam.api_key %>"
+            },
+            "host": "gateway.seven.io",
+            "method": "POST",
+            "path": "/api/voice"
+        }
+    }
+}

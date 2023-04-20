@@ -6,5 +6,6 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="fresh_client" level="application" />
     <orderEntry type="library" name="freshdesk" level="application" />
+    <orderEntry type="library" name="@freshworks/crayons" level="application" />
   </component>
 </module>

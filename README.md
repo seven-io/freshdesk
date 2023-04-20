@@ -1,4 +1,6 @@
-# sms77 for freshdesk
+![](https://www.seven.io/wp-content/uploads/Logo.svg "seven Logo")
+
+# seven for freshdesk
 
 ## Description
 
@@ -15,15 +17,15 @@ Works on:
 
 ### Send SMS to contact
 
-<img alt='Send SMS' src="screenshots/contact_details.png" />
+![](screenshots/contact_details.png "Send SMS to contact")
 
 ### Send SMS to ticket contact
 
-<img alt='Send SMS' src="screenshots/ticket_details.png" />
+![](screenshots/ticket_details.png "Send SMS to ticket contact")
 
 ### Configuration
 
-<img alt='Send SMS' src="screenshots/custom_config.png" />
+![](screenshots/custom_config.png "Configuration")
 
 ***
 
@@ -37,13 +39,13 @@ Works on:
    along with
    the [FDK (Freshworks Development Kit)](https://developers.freshdesk.com/v2/docs/freshworks-cli/)
    .
-3. A [sms77](https://www.sms77.io) account with API key.
+3. A [seven](https://www.seven.io) account with [API key](https://help.seven.io/en/api-key-access).
 
 ### Usage
 
 1. Run the app locally using
    the [`fdk run`](https://developers.freshdesk.com/v2/docs/freshworks-cli/#run) command.
-2. Go to `http://localhost:10001/custom_configs` in your browser to set up your sms77 API
+2. Go to `http://localhost:10001/custom_configs` in your browser to set up your seven API
    key
 3. Go to Freshdesk, navigate to the tickets page and select any ticket
 4. Refer to

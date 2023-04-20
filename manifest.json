@@ -1,10 +1,10 @@
 {
     "dependencies": {},
     "engines": {
-        "node": "14.18.3",
-        "fdk": "8.6.4"
+        "node": "18.13.0",
+        "fdk": "9.0.0"
     },
-    "platform-version": "2.2",
+    "platform-version": "2.3",
     "product": {
         "freshdesk": {
             "events": {
@@ -41,10 +41,11 @@
                     "icon": "styles/images/icon.svg",
                     "url": "index.html"
                 }
+            },
+            "requests": {
+                "sendSMS": {},
+                "sendVoice": {}
             }
         }
-    },
-    "whitelisted-domains": [
-        "https://gateway.sms77.io"
-    ]
+    }
 }
