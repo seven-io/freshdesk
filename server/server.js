@@ -1,63 +1,24 @@
 exports = {
-    onAppInstallHandler: async function() {
-        renderData()
-    },
-    onAppUninstallHandler: async function() {
-        renderData()
-    },
-    onTicketCreateHandler: async function() {
-        renderData()
-    },
-    onScheduledEventHandler: async function() {
-        renderData()
-    },
-    onExternalEventHandler: async function() {
-        renderData()
-    },
-    request: async function(tpl, params, args) {
-        /*        const headers = {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json',
-                    SentWith: 'freshworks',
-                    'X-Api-Key': args.iparams.api_key,
-                }*/
-        const body = Object.assign({
-            debug: Number(args.debug),
-            json: 1,
-            text: args.text,
-            to: args.to,
-        }, params)
+    async request(tpl, args) {
+        if ('debug' in args) args.debug = Number(args.debug)
 
-        try {
-            const {response} = await $request.invokeTemplate(tpl, {
-                body: JSON.stringify(body),
-                //headers,
-            })
-            const success = Number.parseInt(JSON.parse(response).success)
+        delete args.iparams
+        delete args.isInstall
 
-            return renderData(null, success)
-        } catch (e) {
-            return renderData({message: e.message, status: 400})
-        }
+        const {response} = await $request.invokeTemplate(tpl, {body: JSON.stringify(args)})
+        const res = JSON.parse(response)
+
+        if (typeof res !== 'string') return renderData(null, res)
+
+        const status = 400
+        const message = 'The authentication failed. Please check your API key.'
+
+        return renderData({message, status})
     },
-    sendSMS: async function(args) {
-        const params = {
-            flash: Number(args.flash),
-            foreign_id: args.foreign_id,
-            label: args.label,
-            from: '' === args.from ? args.iparams.from : args.from,
-            no_reload: Number(args.no_reload),
-            performance_tracking: Number(args.performance_tracking),
-        }
-
-        return await this.request('sendSMS', params, args)
+    async sendSMS(args) {
+        return await this.request('sendSMS', args)
     },
-    sendVoice: async function(args) {
-        const params = {
-            from: '' === args.from ? args.iparams.voice_from : args.from,
-            xml: Number(args.xml),
-        }
-
-        return await this.request('sendVoice', params, args)
+    async sendVoice(args) {
+        return await this.request('sendVoice', args)
     },
 }

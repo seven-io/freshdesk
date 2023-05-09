@@ -1,190 +1,48 @@
-init()
-
-async function init() {
+(async () => {
     const client = await app.initialized()
 
+    const debugInput = {
+        hint: 'Act as sandbox',
+        id: 'debug',
+        label: 'Debug?',
+        name: 'debug',
+        placeholder: null,
+        required: false,
+        type: 'CHECKBOX',
+    }
+    const fromInput = {
+        id: 'from',
+        label: 'From',
+        name: 'from',
+        required: false,
+        type: 'TEXT',
+    }
+    const toInput = {
+        id: 'to',
+        label: 'To',
+        name: 'to',
+        required: true,
+        type: 'TEXT',
+    }
+    const textInput = {
+        id: 'text',
+        label: 'Message',
+        name: 'text',
+        placeholder: 'Enter your Message',
+        required: true,
+        type: 'TEXT',
+    }
+
     client.events.on('app.activated', async () => {
+        const smsForm = document.createElement('fw-form')
+        const voiceForm = document.createElement('fw-form')
+        const formContainer = document.querySelector('#form-container')
         const {contact} = await client.data.get('contact')
-        const {mobile, phone} = contact
-        const to = mobile || phone || ''
+        const to = contact.mobile || contact.phone || ''
 
         const form = document.createElement('fw-form')
-        const formContainer = document.querySelector('#form-container')
-        const debugInput = {
-            hint: 'Act as sandbox',
-            id: 'debug',
-            label: 'Debug?',
-            name: 'debug',
-            placeholder: null,
-            required: false,
-            type: 'CHECKBOX',
-        }
-        const fromInput = {
-            id: 'from',
-            label: 'From (overwrite)',
-            name: 'from',
-            required: false,
-            type: 'TEXT',
-        }
-        const toInput = {
-            id: 'to',
-            label: 'To',
-            name: 'to',
-            required: true,
-            type: 'TEXT',
-        }
-        const textInput = {
-            id: 'text',
-            label: 'Message',
-            name: 'text',
-            placeholder: 'Enter your Message',
-            required: true,
-            type: 'TEXT',
-        }
-        const formSchemaSms = [
-            {
-                ...toInput,
-                hint: 'Specify multiple recipient separated by comma',
-                placeholder: 'Enter recipient number(s)',
-                position: 2,
-            },
-            {
-                ...textInput,
-                hint: 'Please provide a text of at max 1520 characters',
-                position: 3,
-            },
-            {
-                ...fromInput,
-                hint: 'Specify a sender ID',
-                placeholder: 'Max 16 numeric or 11 alphanumeric chars',
-                position: 4,
-            },
-            {
-                hint: 'A label for your statistics',
-                id: 'label',
-                label: 'Label',
-                name: 'label',
-                placeholder: 'Allowed: a-z, A-Z, 0-9, .-_@',
-                position: 5,
-                required: false,
-                type: 'TEXT',
-            },
-            {
-                hint: 'Custom identifier returned in callbacks',
-                id: 'foreign_id',
-                label: 'Foreign ID',
-                name: 'foreign_id',
-                placeholder: 'Allowed: a-z, A-Z, 0-9, .-_@',
-                position: 6,
-                required: false,
-                type: 'TEXT',
-            },
-            {
-                hint: 'Send as flash SMS',
-                id: 'flash',
-                label: 'Flash?',
-                name: 'flash',
-                placeholder: null,
-                position: 7,
-                required: false,
-                type: 'CHECKBOX',
-            },
-            {
-                ...debugInput,
-                position: 8,
-            },
-            {
-                hint: 'Allow duplicate SMS',
-                id: 'no_reload',
-                label: 'No Reload?',
-                name: 'no_reload',
-                placeholder: null,
-                position: 9,
-                required: false,
-                type: 'CHECKBOX',
-            },
-            {
-                hint: 'Track click performance for URLs',
-                id: 'performance_tracking',
-                label: 'Performance Tracking?',
-                name: 'performance_tracking',
-                placeholder: null,
-                position: 10,
-                required: false,
-                type: 'CHECKBOX',
-            },
-        ]
-        const formSchemaVoice = [
-            {
-                ...toInput,
-                hint: 'Specify the number to call',
-                placeholder: 'Enter recipient number',
-                position: 2,
-            },
-            {
-                ...textInput,
-                hint: 'Please provide a text of at max 10000 characters',
-                position: 3,
-            },
-            {
-                ...fromInput,
-                hint: 'Specify a caller ID',
-                placeholder: 'Max 16 numeric characters',
-                position: 4,
-            },
-            {
-                ...debugInput,
-                position: 5,
-            },
-            {
-                hint: 'Enable if text is of XML type',
-                id: 'xml',
-                label: 'XML?',
-                name: 'xml',
-                placeholder: null,
-                position: 6,
-                required: false,
-                type: 'CHECKBOX',
-            },
-        ]
-        const validationSchemaSms = Yup.object().shape({
-            foreign_id: Yup
-                .string()
-                .max(64, 'max 64 characters')
-                .nullable(),
-            label: Yup
-                .string()
-                .max(100, 'max 100 characters')
-                .nullable(),
-            from: Yup
-                .string()
-                .max(16, 'max 16 characters')
-                .nullable(),
-            text: Yup
-                .string()
-                .required('Text is required')
-                .min(1, 'min 1 character')
-                .max(1520, 'max 1520 characters'),
-            to: Yup
-                .string()
-                .required('Specify at least one recipient'),
-        })
-        const validationSchemaVoice = Yup.object().shape({
-            from: Yup
-                .string()
-                .max(11, 'max 11 characters')
-                .nullable(),
-            text: Yup
-                .string()
-                .required('Text is required')
-                .min(1, 'min 1 character')
-                .max(10000, 'max 10000 characters'),
-            to: Yup
-                .string()
-                .required('Specify at least one recipient'),
-        })
         form.formSchema = {
-            name: 'Default Form',
+            name: 'Message Type Form',
             fields: [{
                 choices: [
                     {
@@ -204,10 +62,11 @@ async function init() {
                 type: 'RADIO',
             }],
         }
-        form.initialValues = {
-            to,
-        }
-
+        form.validationSchema = Yup.object().shape({
+            method: Yup
+                .string()
+                .required('Specify a message type'),
+        })
         formContainer.prepend(form)
 
         form.addEventListener('fwFormValueChanged', e => {
@@ -215,43 +74,225 @@ async function init() {
 
             if (field !== 'method') return
 
+            if (!value) return removeMessageForms()
+
             const isSms = value === 'SMS'
 
-            const fields = isSms ? formSchemaSms : formSchemaVoice
-            form.formSchema.fields.splice(1, Infinity, ...fields)
-            form.validationSchema = isSms ? validationSchemaSms : validationSchemaVoice
-
-            const {from, voice_from} = client.context.settings
-            form.setFieldValue('from', isSms ? from : voice_from)
+            isSms ? renderSmsForm() : renderVoiceForm()
         })
 
         document.querySelector('#submit').addEventListener('click', async e => {
-            const {values, isValid} = await form.doSubmit(e)
+            const msgTypeValidation = await form.doSubmit(e)
+            if (!msgTypeValidation.isValid) return
+
+            const msgType = (await form.getValues()).values.method
+            const isSMS = msgType === 'SMS'
+            const msgForm = isSMS ? smsForm : voiceForm
+            const {isValid, values} = await msgForm.doSubmit(e)
 
             if (!isValid) return
 
-            const {method, ...params} = values
+            await send(isSMS ? 'sendSMS' : 'sendVoice', values)
+        })
 
-            Object.entries(params).forEach(([k, v]) => {
-                if (v === undefined || v === false || v === null) delete params[k]
-            })
+        async function send(requestTpl, params) {
+            let message
+            let type = 'danger'
 
-            const requestTpl = method === 'SMS' ? 'sendSMS' : 'sendVoice'
-            let message, type
             try {
                 const res = await client.request.invoke(requestTpl, params)
-                message = `Message dispatched with response: ${res.response}`
                 type = 'success'
+                message = `Action dispatched with code: ${res.response.success}`
             } catch (e) {
-                message = e.message || 'Unexpected error.'
-                type = 'danger'
+                message = e.message
             }
 
             client.interface.trigger('showNotify', {message, type})
-        })
+        }
 
         document.querySelector('#reset').addEventListener('click', e => {
             form.doReset(e)
+            smsForm.doReset(e)
+            voiceForm.doReset(e)
+
+            removeMessageForms()
         })
+
+        function removeMessageForms() {
+            smsForm.remove()
+            voiceForm.remove()
+        }
+
+        async function renderSmsForm() {
+            voiceForm.remove()
+
+            smsForm.formSchema = {
+                name: 'SMS Form',
+                fields: [
+                    {
+                        ...toInput,
+                        hint: 'Specify multiple recipient separated by comma',
+                        placeholder: 'Enter recipient number(s)',
+                        position: 2,
+                    },
+                    {
+                        ...textInput,
+                        hint: 'Please provide a text of at max 1520 characters',
+                        position: 3,
+                    },
+                    {
+                        ...fromInput,
+                        hint: 'Specify a sender ID',
+                        placeholder: 'Max 16 numeric or 11 alphanumeric chars',
+                        position: 4,
+                    },
+                    {
+                        hint: 'A label for your statistics',
+                        id: 'label',
+                        label: 'Label',
+                        name: 'label',
+                        placeholder: 'Allowed: a-z, A-Z, 0-9, .-_@',
+                        position: 5,
+                        required: false,
+                        type: 'TEXT',
+                    },
+                    {
+                        hint: 'Custom identifier returned in callbacks',
+                        id: 'foreign_id',
+                        label: 'Foreign ID',
+                        name: 'foreign_id',
+                        placeholder: 'Allowed: a-z, A-Z, 0-9, .-_@',
+                        position: 6,
+                        required: false,
+                        type: 'TEXT',
+                    },
+                    {
+                        hint: 'Send as flash SMS',
+                        id: 'flash',
+                        label: 'Flash?',
+                        name: 'flash',
+                        placeholder: null,
+                        position: 7,
+                        required: false,
+                        type: 'CHECKBOX',
+                    },
+                    {
+                        ...debugInput,
+                        position: 8,
+                    },
+                    {
+                        hint: 'Allow duplicate SMS',
+                        id: 'no_reload',
+                        label: 'No Reload?',
+                        name: 'no_reload',
+                        placeholder: null,
+                        position: 9,
+                        required: false,
+                        type: 'CHECKBOX',
+                    },
+                    {
+                        hint: 'Track click performance for URLs',
+                        id: 'performance_tracking',
+                        label: 'Performance Tracking?',
+                        name: 'performance_tracking',
+                        placeholder: null,
+                        position: 10,
+                        required: false,
+                        type: 'CHECKBOX',
+                    },
+                ],
+            }
+            smsForm.initialValues = {
+                to,
+            }
+            smsForm.validationSchema = Yup.object().shape({
+                foreign_id: Yup
+                    .string()
+                    .max(64, 'max 64 characters')
+                    .nullable(),
+                label: Yup
+                    .string()
+                    .max(100, 'max 100 characters')
+                    .nullable(),
+                from: Yup
+                    .string()
+                    .max(16, 'max 16 characters')
+                    .nullable(),
+                text: Yup
+                    .string()
+                    .required('Text is required')
+                    .min(1, 'min 1 character')
+                    .max(1520, 'max 1520 characters'),
+                to: Yup
+                    .string()
+                    .required('Specify at least one recipient'),
+            })
+
+            smsForm.setFieldValue('from', client.context.settings.from)
+
+            formContainer.append(smsForm)
+        }
+
+        async function renderVoiceForm() {
+            smsForm.remove()
+
+            voiceForm.formSchema = {
+                name: 'Voice Form',
+                fields: [
+                    {
+                        ...toInput,
+                        hint: 'Specify the number to call',
+                        placeholder: 'Enter recipient number',
+                        position: 2,
+                    },
+                    {
+                        ...textInput,
+                        hint: 'Please provide a text of at max 10000 characters',
+                        position: 3,
+                    },
+                    {
+                        ...fromInput,
+                        hint: 'Specify a caller ID',
+                        placeholder: 'Max 16 numeric characters',
+                        position: 4,
+                    },
+                    {
+                        ...debugInput,
+                        position: 5,
+                    },
+                    {
+                        hint: 'Enable if text is of XML type',
+                        id: 'xml',
+                        label: 'XML?',
+                        name: 'xml',
+                        placeholder: null,
+                        position: 6,
+                        required: false,
+                        type: 'CHECKBOX',
+                    },
+                ],
+            }
+            voiceForm.initialValues = {
+                to,
+            }
+            voiceForm.validationSchema = Yup.object().shape({
+                from: Yup
+                    .string()
+                    .max(16, 'max 16 characters')
+                    .nullable(),
+                text: Yup
+                    .string()
+                    .required('Text is required')
+                    .min(1, 'min 1 character')
+                    .max(10000, 'max 10000 characters'),
+                to: Yup
+                    .string()
+                    .required('Specify at least one recipient'),
+            })
+
+            voiceForm.setFieldValue('from', client.context.settings.from_voice)
+
+            formContainer.append(voiceForm)
+        }
     })
-}
+})()

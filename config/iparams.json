@@ -11,7 +11,7 @@
         "display_name": "Default sender ID for SMS",
         "type": "text"
     },
-    "voice_from": {
+    "from_voice": {
         "description": "Must be verified or a shared number.",
         "display_name": "Default caller ID for text-to-speech calls",
         "type": "text"
