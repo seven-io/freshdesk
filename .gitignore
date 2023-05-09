@@ -5,3 +5,4 @@ log/
 server/node_modules/
 server/etc/
 dist/
+_screenshots/*.mp4

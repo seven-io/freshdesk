@@ -17,15 +17,15 @@ Works on:
 
 ### Send SMS to contact
 
-![](screenshots/contact_details.png "Send SMS to contact")
+![](_screenshots/contact_details.png "Send SMS to contact")
 
 ### Send SMS to ticket contact
 
-![](screenshots/ticket_details.png "Send SMS to ticket contact")
+![](_screenshots/ticket_details.png "Send SMS to ticket contact")
 
 ### Configuration
 
-![](screenshots/custom_config.png "Configuration")
+![](_screenshots/custom_config.png "Configuration")
 
 ***
 
