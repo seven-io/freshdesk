@@ -28,37 +28,33 @@
             .string()
             .max(16, 'max 16 characters')
             .nullable(),
+        to: Yup
+            .string()
+            .required('Specify at least one recipient'),
     }
 
-    let form = null
-
     client.events.on('app.activated', async () => {
+        const msgTypeSelector = 'msgType'
+        const isRendered = document.getElementById(msgTypeSelector) !== null
+        const form = document.createElement('fw-form')
+        form.id = msgTypeSelector
         const smsForm = document.createElement('fw-form')
         const voiceForm = document.createElement('fw-form')
-        const formContainer = document.querySelector('#form-container')
+        const formContainer = document.getElementById('form-container')
         const {contact} = await client.data.get('contact')
         const to = contact.mobile || contact.phone || ''
 
-        if (!form) {
-            form = buildForm()
+        if (!isRendered) buildForm()
 
-            formContainer.prepend(form)
-        }
+        document.getElementById('reset').addEventListener('click', e => reset(e))
 
-        document.querySelector('#reset').addEventListener('click', e => {
-            form.doReset(e)
-            smsForm.doReset(e)
-            voiceForm.doReset(e)
-
-            removeMessageForms()
-        })
-
-        document.querySelector('#submit').addEventListener('click', async e => {
+        document.getElementById('submit').addEventListener('click', async e => {
             const msgTypeValidation = await form.doSubmit(e)
             if (!msgTypeValidation.isValid) return
 
-            const msgType = (await form.getValues()).values.method
-            const isSMS = msgType === 'SMS'
+            const {values: formValues} = await form.getValues()
+            const {method} = formValues
+            const isSMS = method === 'SMS'
             const msgForm = isSMS ? smsForm : voiceForm
             const {isValid, values} = await msgForm.doSubmit(e)
 
@@ -70,7 +66,6 @@
         })
 
         function buildForm() {
-            const form = document.createElement('fw-form')
             form.formSchema = {
                 name: 'Message Type Form',
                 fields: [{
@@ -105,17 +100,21 @@
 
                 if (!value) return removeMessageForms()
 
-                const isSms = value === 'SMS'
-
-                isSms ? renderSmsForm() : renderVoiceForm()
+                renderMessageForm(value)
             })
 
-            return form
+            formContainer.prepend(form)
         }
 
         function removeMessageForms() {
             smsForm.remove()
             voiceForm.remove()
+        }
+
+        function renderMessageForm(value) {
+            const isSms = value === 'SMS'
+
+            isSms ? renderSmsForm() : renderVoiceForm()
         }
 
         async function renderSmsForm() {
@@ -193,9 +192,7 @@
                     },
                 ],
             }
-            smsForm.initialValues = {
-                to,
-            }
+            smsForm.initialValues = {to}
             smsForm.validationSchema = Yup.object().shape({
                 ...yupShapes,
                 foreign_id: Yup
@@ -211,9 +208,6 @@
                     .required('Text is required')
                     .min(1, 'min 1 character')
                     .max(1520, 'max 1520 characters'),
-                to: Yup
-                    .string()
-                    .required('Specify at least one recipient'),
             })
 
             smsForm.setFieldValue('from', client.context.settings.from)
@@ -256,9 +250,7 @@
                     },
                 ],
             }
-            voiceForm.initialValues = {
-                to,
-            }
+            voiceForm.initialValues = {to}
             voiceForm.validationSchema = Yup.object().shape({
                 ...yupShapes,
                 text: Yup
@@ -266,9 +258,6 @@
                     .required('Text is required')
                     .min(1, 'min 1 character')
                     .max(10000, 'max 10000 characters'),
-                to: Yup
-                    .string()
-                    .required('Specify at least one recipient'),
             })
 
             voiceForm.setFieldValue('from', client.context.settings.from_voice)
@@ -285,25 +274,20 @@
         }
 
         async function submit(requestTpl, params) {
-            let message
+            const {response} = await client.request.invoke(requestTpl, params)
+            const code = Number.parseInt(response.success)
+
+            let message = `Action dispatched with code: ${code}`
             let type = 'danger'
 
-            try {
-                const res = await client.request.invoke(requestTpl, params)
-                type = 'success'
-
-                const code = Number.parseInt(res.response.success)
-                message = `Action dispatched with code: ${code}`
-                switch (code) {
-                    case 100:
-                        message = 'Message sent!'
-                        break
-                    case 202:
-                        message = 'Invalid recipient'
-                        break
-                }
-            } catch (e) {
-                message = e.message
+            switch (code) {
+                case 100:
+                    message = 'Message sent!'
+                    type = 'success'
+                    break
+                case 202:
+                    message = 'Invalid recipient'
+                    break
             }
 
             client.interface.trigger('showNotify', {message, type})
