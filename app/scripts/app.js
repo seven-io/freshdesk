@@ -238,16 +238,6 @@
                         placeholder: 'Max 16 numeric characters',
                         position: 4,
                     },
-                    {
-                        hint: 'Enable if text is of XML type',
-                        id: 'xml',
-                        label: 'XML?',
-                        name: 'xml',
-                        placeholder: null,
-                        position: 5,
-                        required: false,
-                        type: 'CHECKBOX',
-                    },
                 ],
             }
             voiceForm.initialValues = {to}
