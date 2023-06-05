@@ -1,35 +1,35 @@
 {
-    "dependencies": {},
-    "engines": {
-        "node": "18.13.0",
-        "fdk": "9.0.0"
-    },
-    "platform-version": "2.3",
-    "product": {
-        "freshdesk": {
-            "events": {},
-            "functions": {
-                "sendSMS": {
-                    "timeout": 10
-                },
-                "sendVoice": {
-                    "timeout": 10
-                }
-            },
-            "location": {
-                "contact_sidebar": {
-                    "icon": "styles/images/icon.svg",
-                    "url": "index.html"
-                },
-                "ticket_sidebar": {
-                    "icon": "styles/images/icon.svg",
-                    "url": "index.html"
-                }
-            },
-            "requests": {
-                "sendSMS": {},
-                "sendVoice": {}
-            }
+  "dependencies": {},
+  "engines": {
+    "node": "18.16.0",
+    "fdk": "9.0.1"
+  },
+  "platform-version": "2.3",
+  "product": {
+    "freshdesk": {
+      "events": {},
+      "functions": {
+        "sendSMS": {
+          "timeout": 10
+        },
+        "sendVoice": {
+          "timeout": 10
         }
+      },
+      "location": {
+        "contact_sidebar": {
+          "icon": "styles/images/icon.svg",
+          "url": "index.html"
+        },
+        "ticket_sidebar": {
+          "icon": "styles/images/icon.svg",
+          "url": "index.html"
+        }
+      },
+      "requests": {
+        "sendSMS": {},
+        "sendVoice": {}
+      }
     }
+  }
 }
