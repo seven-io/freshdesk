@@ -65,6 +65,8 @@
             if (!isValid) return
 
             await send(isSMS ? 'sendSMS' : 'sendVoice', values)
+
+            reset(e)
         })
 
         function buildForm() {
@@ -272,6 +274,14 @@
             voiceForm.setFieldValue('from', client.context.settings.from_voice)
 
             formContainer.append(voiceForm)
+        }
+
+        function reset(e) {
+            form.doReset(e)
+            smsForm.doReset(e)
+            voiceForm.doReset(e)
+
+            removeMessageForms()
         }
 
         async function send(requestTpl, params) {
