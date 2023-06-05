@@ -1,7 +1,5 @@
 exports = {
     async request(tpl, args) {
-        if ('debug' in args) args.debug = Number(args.debug)
-
         delete args.iparams
         delete args.isInstall
 

@@ -64,7 +64,7 @@
 
             if (!isValid) return
 
-            await send(isSMS ? 'sendSMS' : 'sendVoice', values)
+            await submit(isSMS ? 'sendSMS' : 'sendVoice', values)
 
             reset(e)
         })
@@ -284,14 +284,24 @@
             removeMessageForms()
         }
 
-        async function send(requestTpl, params) {
+        async function submit(requestTpl, params) {
             let message
             let type = 'danger'
 
             try {
                 const res = await client.request.invoke(requestTpl, params)
                 type = 'success'
-                message = `Action dispatched with code: ${res.response.success}`
+
+                const code = Number.parseInt(res.response.success)
+                message = `Action dispatched with code: ${code}`
+                switch (code) {
+                    case 100:
+                        message = 'Message sent!'
+                        break
+                    case 202:
+                        message = 'Invalid recipient'
+                        break
+                }
             } catch (e) {
                 message = e.message
             }
