@@ -23,6 +23,14 @@
         required: true,
         type: 'TEXT',
     }
+    const yupShapes = {
+        from: Yup
+            .string()
+            .max(16, 'max 16 characters')
+            .nullable(),
+    }
+
+    let form = null
 
     client.events.on('app.activated', async () => {
         const smsForm = document.createElement('fw-form')
@@ -31,45 +39,18 @@
         const {contact} = await client.data.get('contact')
         const to = contact.mobile || contact.phone || ''
 
-        const form = document.createElement('fw-form')
-        form.formSchema = {
-            name: 'Message Type Form',
-            fields: [{
-                choices: [
-                    {
-                        position: 1,
-                        value: 'SMS',
-                    },
-                    {
-                        position: 2,
-                        value: 'Voice',
-                    },
-                ],
-                id: 'method',
-                label: 'Message Type',
-                name: 'method',
-                position: 1,
-                required: true,
-                type: 'RADIO',
-            }],
+        if (!form) {
+            form = buildForm()
+
+            formContainer.prepend(form)
         }
-        form.validationSchema = Yup.object().shape({
-            method: Yup
-                .string()
-                .required('Specify a message type'),
-        })
-        formContainer.prepend(form)
 
-        form.addEventListener('fwFormValueChanged', e => {
-            const {field, value} = e.detail
+        document.querySelector('#reset').addEventListener('click', e => {
+            form.doReset(e)
+            smsForm.doReset(e)
+            voiceForm.doReset(e)
 
-            if (field !== 'method') return
-
-            if (!value) return removeMessageForms()
-
-            const isSms = value === 'SMS'
-
-            isSms ? renderSmsForm() : renderVoiceForm()
+            removeMessageForms()
         })
 
         document.querySelector('#submit').addEventListener('click', async e => {
@@ -86,28 +67,49 @@
             await send(isSMS ? 'sendSMS' : 'sendVoice', values)
         })
 
-        async function send(requestTpl, params) {
-            let message
-            let type = 'danger'
-
-            try {
-                const res = await client.request.invoke(requestTpl, params)
-                type = 'success'
-                message = `Action dispatched with code: ${res.response.success}`
-            } catch (e) {
-                message = e.message
+        function buildForm() {
+            const form = document.createElement('fw-form')
+            form.formSchema = {
+                name: 'Message Type Form',
+                fields: [{
+                    choices: [
+                        {
+                            position: 1,
+                            value: 'SMS',
+                        },
+                        {
+                            position: 2,
+                            value: 'Voice',
+                        },
+                    ],
+                    id: 'method',
+                    label: 'Message Type',
+                    name: 'method',
+                    position: 1,
+                    required: true,
+                    type: 'RADIO',
+                }],
             }
+            form.validationSchema = Yup.object().shape({
+                method: Yup
+                    .string()
+                    .required('Specify a message type'),
+            })
 
-            client.interface.trigger('showNotify', {message, type})
+            form.addEventListener('fwFormValueChanged', e => {
+                const {field, value} = e.detail
+
+                if (field !== 'method') return
+
+                if (!value) return removeMessageForms()
+
+                const isSms = value === 'SMS'
+
+                isSms ? renderSmsForm() : renderVoiceForm()
+            })
+
+            return form
         }
-
-        document.querySelector('#reset').addEventListener('click', e => {
-            form.doReset(e)
-            smsForm.doReset(e)
-            voiceForm.doReset(e)
-
-            removeMessageForms()
-        })
 
         function removeMessageForms() {
             smsForm.remove()
@@ -193,6 +195,7 @@
                 to,
             }
             smsForm.validationSchema = Yup.object().shape({
+                ...yupShapes,
                 foreign_id: Yup
                     .string()
                     .max(64, 'max 64 characters')
@@ -200,10 +203,6 @@
                 label: Yup
                     .string()
                     .max(100, 'max 100 characters')
-                    .nullable(),
-                from: Yup
-                    .string()
-                    .max(16, 'max 16 characters')
                     .nullable(),
                 text: Yup
                     .string()
@@ -259,10 +258,7 @@
                 to,
             }
             voiceForm.validationSchema = Yup.object().shape({
-                from: Yup
-                    .string()
-                    .max(16, 'max 16 characters')
-                    .nullable(),
+                ...yupShapes,
                 text: Yup
                     .string()
                     .required('Text is required')
@@ -276,6 +272,21 @@
             voiceForm.setFieldValue('from', client.context.settings.from_voice)
 
             formContainer.append(voiceForm)
+        }
+
+        async function send(requestTpl, params) {
+            let message
+            let type = 'danger'
+
+            try {
+                const res = await client.request.invoke(requestTpl, params)
+                type = 'success'
+                message = `Action dispatched with code: ${res.response.success}`
+            } catch (e) {
+                message = e.message
+            }
+
+            client.interface.trigger('showNotify', {message, type})
         }
     })
 })()
