@@ -276,7 +276,19 @@
                     type = 'success'
                     break
                 case 202:
-                    message = 'Invalid recipient'
+                    message = 'The recipient number is invalid.'
+                    break
+                case 402:
+                    message = 'The Reload Lock prevents sending this SMS as it has already been sent within the last 180 seconds.'
+                    break
+                case 403:
+                    message = 'The maximum limit for this number per day has been reached.'
+                    break
+                case 500:
+                    message = 'The account has too little credit available.'
+                    break
+                case 600:
+                    message = 'The carrier delivery failed.'
                     break
             }
 
