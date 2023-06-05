@@ -1,15 +1,6 @@
 (async () => {
     const client = await app.initialized()
 
-    const debugInput = {
-        hint: 'Act as sandbox',
-        id: 'debug',
-        label: 'Debug?',
-        name: 'debug',
-        placeholder: null,
-        required: false,
-        type: 'CHECKBOX',
-    }
     const fromInput = {
         id: 'from',
         label: 'From',
@@ -177,16 +168,12 @@
                         type: 'CHECKBOX',
                     },
                     {
-                        ...debugInput,
-                        position: 8,
-                    },
-                    {
                         hint: 'Allow duplicate SMS',
                         id: 'no_reload',
                         label: 'No Reload?',
                         name: 'no_reload',
                         placeholder: null,
-                        position: 9,
+                        position: 8,
                         required: false,
                         type: 'CHECKBOX',
                     },
@@ -196,7 +183,7 @@
                         label: 'Performance Tracking?',
                         name: 'performance_tracking',
                         placeholder: null,
-                        position: 10,
+                        position: 9,
                         required: false,
                         type: 'CHECKBOX',
                     },
@@ -257,16 +244,12 @@
                         position: 4,
                     },
                     {
-                        ...debugInput,
-                        position: 5,
-                    },
-                    {
                         hint: 'Enable if text is of XML type',
                         id: 'xml',
                         label: 'XML?',
                         name: 'xml',
                         placeholder: null,
-                        position: 6,
+                        position: 5,
                         required: false,
                         type: 'CHECKBOX',
                     },
