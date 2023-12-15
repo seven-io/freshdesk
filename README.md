@@ -1,4 +1,6 @@
-# sms77 for freshdesk
+<img src="https://www.seven.io/wp-content/uploads/Logo.svg" width="250" />
+
+# seven.io for freshdesk
 
 ## Description
 
@@ -37,13 +39,13 @@ Works on:
    along with
    the [FDK (Freshworks Development Kit)](https://developers.freshdesk.com/v2/docs/freshworks-cli/)
    .
-3. A [sms77](https://www.sms77.io) account with API key.
+3. A [seven.io](https://www.seven.io) account with API key.
 
 ### Usage
 
 1. Run the app locally using
    the [`fdk run`](https://developers.freshdesk.com/v2/docs/freshworks-cli/#run) command.
-2. Go to `http://localhost:10001/custom_configs` in your browser to set up your sms77 API
+2. Go to `http://localhost:10001/custom_configs` in your browser to set up your seven.io API
    key
 3. Go to Freshdesk, navigate to the tickets page and select any ticket
 4. Refer to
